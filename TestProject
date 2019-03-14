@@ -1,0 +1,30 @@
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+
+public class MainClass {
+    public static void main(String[] args) throws Exception {
+        //Input сделал таким образом, для проверки просто менял ссылки Diff-Case
+       Document doc =  Jsoup.connect("https://agileengine.bitbucket.io/beKIvpUlPMtzhfAy/samples/sample-4-the-mash.html").get();
+       Elements elements = doc.select("*");
+       String path="";
+       StringBuilder tags = new StringBuilder();
+       Element epath;
+       for (Element e:elements){
+            //Ищем нужное поле в html
+           if((e.className().contains("btn "))&& (e.hasAttr("title"))&& (e.getElementsContainingText(" ").hasText())) {
+               System.out.println("Element: "+e);
+               epath = e;
+               //Для нахождения абсолютного пути пробегаем по "родителям" найденного элемента
+               while(!epath.tagName().equals("#root")){
+                    tags.insert(0, "<"+epath.tagName()+">");
+                    epath = epath.parent();
+               }
+               System.out.println("Path: = <#root>"+tags);
+           }
+       }
+
+    }
+}
